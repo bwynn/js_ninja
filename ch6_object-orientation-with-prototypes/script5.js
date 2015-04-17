@@ -6,19 +6,20 @@ function assert(value, desc) {
   document.getElementById('results').appendChild(li);
 }
 
-// defines a constructor that creates a Ninja with a single boolean prop
+// defines an instance method with the same name as a prototype mehtod
 function Ninja() {
   this.swung = true;
+  this.swingSword = function() {
+    return !this.swung;
+  };
 }
 
-// instantiates an instance of Ninja by calling the constructor function
-// via the new operator
 var ninja = new Ninja();
 
-// adds a method to the prototype after the object has been created
+// defines a prototyped method with same name as the instance method
 Ninja.prototype.swingSword = function() {
   return this.swung;
-}
+};
 
-// tests if the method exists in the object
-assert(ninja.swingSword(), "Method exists, even out of order");
+assert(ninja.swingSword(),
+          "Called the instance method, not the prototype method");
