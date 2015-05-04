@@ -1,4 +1,4 @@
-// setup assert testing function
+cd// setup assert testing function
 function assert(value, desc) {
   var li = document.createElement('li');
   li.className = value ? "pass" : "fail";
