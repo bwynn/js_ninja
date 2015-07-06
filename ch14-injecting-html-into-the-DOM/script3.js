@@ -71,7 +71,39 @@ function getNodes(htmlString, doc, fragment) {
   return div.childNodes;
 }
 
-assert(getNodes("<td>test</td><td>test2</td>").length === 2,
-      "Get two nodes back from the method");
-assert(getNodes("<td>test</td>")[0].nodeName === "TD",
-      "Verify that we're getting the ride node.");
+window.onload = function() {
+  function insert(elems, args, callback) {
+    if (elems.length) {
+      var doc = elems[0].ownerDocument || elems[0],
+          fragment = doc.createDocumentFragment(),
+          scripts = getNodes(args, doc, fragment),
+          first = fragment.firstChild;
+
+      if (first) {
+        for (var i = 0; elems[i]; i++) {
+          callback.call(root(elems[i], first),
+            i > 0 ? fragment.cloneNode(true) : fragment);
+        }
+      }
+    }
+  }
+
+  var divs = document.getElementsByTagName("div");
+
+  insert(divs, ["<b>Name:</b>"], function(fragment) {
+    this.appendChild(fragment);
+  });
+
+  insert(divs, ["<span>First</span><span>Last</span>"],
+    function(fragment) {
+      this.parentNode.insertBefore(fragment, this);
+    });
+};
+
+function root(elem, cur) {
+  return elem.nodeName.toLowerCase() === "table" &&
+         cur.nodeName.toLowerCase() === "tr" ?
+         (elem.getElementsByTagName("tbody")[0] ||
+         elem.appendChild(elem.ownerDocument.createElement("tbody"))) :
+         elem;
+}
